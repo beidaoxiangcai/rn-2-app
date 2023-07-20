@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert, ScrollView, KeyboardAvoidingView, Dimensions } from "react-native";
 import Card from "../components/card";
 import Colors from "../constants/colors";
 import Input from "../components/input";
@@ -44,7 +44,7 @@ const StartGameScreen = (props) => {
             <Card style={styles.numberContainer}>
                 <Text>You seclected</Text>
                 <SelectedNumber>{selectedNumber}</SelectedNumber>
-                <Button title="START GAME" onPress={() => props.startGame(selectedNumber)}/>
+                <Button title="START GAME" onPress={() => props.startGame(selectedNumber)} />
                 {/*注意onPress的写法，调用了startGame函数，selectedNumber作为参数*/}
             </Card>
         );
@@ -52,21 +52,25 @@ const StartGameScreen = (props) => {
 
 
     return (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View style={styles.screen}>
-                <Text style={styles.title}> Start A New Game</Text>
-                <Card style={styles.container}>
-                    <Text >select a number</Text>
-                    <Input style={styles.input} keyboardType='number-pad' maxLength={2} onChangeText={valueHandler} value={enteredValue} />
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.button}><Button title="reset" onPress={resetInputHandler} color={Colors.accent} /></View>
-                        <View style={styles.button}><Button title="comfirm" onPress={confirmedHandler} color={Colors.primary} /></View>
+        <ScrollView>
+            <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
+                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                    <View style={styles.screen}>
+                        <Text style={styles.title}> Start A New Game</Text>
+                        <Card style={styles.container}>
+                            <Text >select a number</Text>
+                            <Input style={styles.input} keyboardType='number-pad' maxLength={2} onChangeText={valueHandler} value={enteredValue} />
+                            <View style={styles.buttonContainer}>
+                                <View style={styles.button}><Button title="reset" onPress={resetInputHandler} color={Colors.accent} /></View>
+                                <View style={styles.button}><Button title="comfirm" onPress={confirmedHandler} color={Colors.primary} /></View>
 
+                            </View>
+                        </Card>
+                        {comfirmedOutput}
                     </View>
-                </Card>
-                {comfirmedOutput}
-            </View>
-        </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </ScrollView>
     );
 }
 
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
     },
     container: {
         alignItems: 'center',
-        width: 300,
+        width: Dimensions.get('window').width * 0.8,
         maxWidth: '80%', //适应不同的屏幕大小，当屏幕太小时，不超过屏幕的80%
     },
     title: {
